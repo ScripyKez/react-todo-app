@@ -6,7 +6,7 @@ import NewTaskForm from "./components/NewTaskForm"
 import Footer from "./components/Footer"
 
 const App = () => {
-  const todos = [
+  const [todos, setTodos] = React.useState([
     {
       label: "Completed task",
       created: "2023-10-27T15:00:23",
@@ -22,12 +22,21 @@ const App = () => {
       created: "2023-10-27T22:26:43",
       id: 3,
     },
-  ]
+  ])
+
+  const removeTask = id => {
+    const idx = todos.findIndex(el => el.id === id)
+    const newArray = [...todos.slice(0, idx), ...todos.slice(idx + 1)]
+
+    setTodos(newArray)
+    return
+  }
+
   return (
     <>
       <NewTaskForm />
       <section className="main">
-        <TaskList todos={todos} />
+        <TaskList todos={todos} removeTask={removeTask} />
         <Footer />
       </section>
     </>

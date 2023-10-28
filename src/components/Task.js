@@ -1,11 +1,18 @@
 import React from "react"
 import formatDistanceToNow from "date-fns/formatDistanceToNow"
 
-export default function Task({ label, created }) {
+export default function Task({ id, label, created, removeTask }) {
+  const [isCompleted, setIsComplited] = React.useState(false)
+
+  const handleChange = () => {
+    setIsComplited(prev => !prev)
+    console.log("change", this)
+  }
+
   return (
-    <>
+    <li key={id} className={isCompleted ? "completed" : ""}>
       <div className="view">
-        <input className="toggle" type="checkbox" />
+        <input className="toggle" type="checkbox" onChange={handleChange} />
         <label>
           <span className="description">{label}</span>
           <span className="created">
@@ -13,9 +20,12 @@ export default function Task({ label, created }) {
           </span>
         </label>
         <button className="icon icon-edit"></button>
-        <button className="icon icon-destroy"></button>
+        <button
+          className="icon icon-destroy"
+          onClick={() => removeTask(id)}
+        ></button>
       </div>
-    </>
+    </li>
   )
 }
 // {/* <li className="completed">
