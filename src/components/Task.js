@@ -1,23 +1,35 @@
-import React from "react"
+import React, { useState } from "react"
 import formatDistanceToNow from "date-fns/formatDistanceToNow"
 
-export default function Task({ id, label, created, removeTask }) {
-  const [isCompleted, setIsComplited] = React.useState(false)
+export default function Task({
+  id,
+  label,
+  created,
+  removeTask,
+  isCompleted,
+  toggleCompleted,
+}) {
+  const [isCompletedTask, setIsComplitedTask] = useState(isCompleted)
+  const [timeAgo] = useState(
+    formatDistanceToNow(new Date(created), { includeSeconds: true })
+  )
 
   const handleChange = () => {
-    setIsComplited(prev => !prev)
-    console.log("change", this)
+    setIsComplitedTask(prev => !prev)
   }
 
   return (
-    <li key={id} className={isCompleted ? "completed" : ""}>
+    <li className={isCompletedTask ? "completed" : ""}>
       <div className="view">
-        <input className="toggle" type="checkbox" onChange={handleChange} />
+        <input
+          className="toggle"
+          type="checkbox"
+          onChange={() => toggleCompleted(id, isCompletedTask, handleChange)}
+          checked={isCompletedTask}
+        />
         <label>
           <span className="description">{label}</span>
-          <span className="created">
-            {formatDistanceToNow(new Date(created))}
-          </span>
+          <span className="created">{timeAgo}</span>
         </label>
         <button className="icon icon-edit"></button>
         <button
