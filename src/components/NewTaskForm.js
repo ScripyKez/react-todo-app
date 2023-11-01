@@ -1,4 +1,5 @@
 import React from "react"
+import PT from "prop-types"
 
 export default function NewTaskForm({ addTask }) {
   const [inputValue, setInputValue] = React.useState("")
@@ -20,4 +21,12 @@ export default function NewTaskForm({ addTask }) {
       />
     </header>
   )
+}
+
+NewTaskForm.defaultProps = {
+  addTask: () => {},
+}
+
+NewTaskForm.propTypes = {
+  addTask: PT.func,
 }

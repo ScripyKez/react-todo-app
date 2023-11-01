@@ -26,8 +26,14 @@ export default function App() {
       id: 3,
     },
   ])
-
   const [todosFiltred, setTodosFiltred] = useState([])
+
+  const counterTodos = () => {
+    return todos?.reduce(
+      (acc, curr) => (curr.isCompleted === false ? (acc += 1) : acc),
+      0
+    )
+  }
 
   const todosFilter = filter => {
     switch (filter) {
@@ -43,7 +49,15 @@ export default function App() {
     }
   }
 
+  const changeTask = (id, newLabel) => {
+    const idx = todos.findIndex(todo => todo.id === id)
+    const newArr = [...todos]
+    newArr[idx].label = newLabel
+    setTodos(newArr)
+  }
+
   const removeCompeted = () => {
+    setTodosFiltred([])
     setTodos(prev => prev.filter(todo => todo.isCompleted !== true))
   }
 
@@ -60,14 +74,12 @@ export default function App() {
   const removeTask = id => {
     const idx = todos.findIndex(el => el.id === id)
     const newArray = [...todos.slice(0, idx), ...todos.slice(idx + 1)]
-
     setTodos(newArray)
-    return
   }
 
   const toggleCompleted = (id, state, cb) => {
     setTodos(prev => {
-      const newArr = [...todos]
+      const newArr = [...prev]
       newArr[prev.findIndex(todo => todo.id === id)].isCompleted = !state
       return newArr
     })
@@ -84,13 +96,11 @@ export default function App() {
           removeTask={removeTask}
           toggleCompleted={toggleCompleted}
           todosFiltred={todosFiltred}
+          changeTask={changeTask}
         />
         <Footer
           removeCompeted={removeCompeted}
-          counter={todos.reduce(
-            (acc, curr) => (curr.isCompleted === false ? (acc += 1) : acc),
-            0
-          )}
+          counter={counterTodos()}
           todosFilter={todosFilter}
         />
       </section>

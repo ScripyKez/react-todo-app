@@ -1,30 +1,57 @@
-import React, { useState } from "react"
+import React from "react"
+import PT from "prop-types"
 
-export default function TaskFilter({ todosFilter }) {
-  const [active, setActive] = useState("All")
+export default class TaskFilter extends React.Component {
+  // state = {
+  //   tab: "All",
+  // }
 
-  const handleActive = e => {
-    if (e.target.tagName === "BUTTON" && e.target.className !== active) {
-      setActive(() => e.target.innerHTML)
-      todosFilter(e.target.innerHTML)
+  handleActive = (e, cb, cb2) => {
+    if (
+      e.target.tagName === "BUTTON" &&
+      e.target.className !== this.props.tab
+    ) {
+      cb2(e.target.innerHTML)
+      cb(e.target.innerHTML)
     }
   }
 
-  return (
-    <ul className="filters" onClick={e => handleActive(e)}>
-      <li>
-        <button className={active === "All" ? "selected" : ""}>All</button>
-      </li>
-      <li>
-        <button className={active === "Active" ? "selected" : ""}>
-          Active
-        </button>
-      </li>
-      <li>
-        <button className={active === "Completed" ? "selected" : ""}>
-          Completed
-        </button>
-      </li>
-    </ul>
-  )
+  render() {
+    return (
+      <ul
+        className="filters"
+        onClick={e =>
+          this.handleActive(e, this.props.todosFilter, this.props.setTabFunc)
+        }
+      >
+        <li>
+          <button className={this.props.tab === "All" ? "selected" : ""}>
+            All
+          </button>
+        </li>
+        <li>
+          <button className={this.props.tab === "Active" ? "selected" : ""}>
+            Active
+          </button>
+        </li>
+        <li>
+          <button className={this.props.tab === "Completed" ? "selected" : ""}>
+            Completed
+          </button>
+        </li>
+      </ul>
+    )
+  }
+}
+
+TaskFilter.defaultProps = {
+  todosFilter: () => {},
+  setTabFunc: () => {},
+  tab: "All",
+}
+
+TaskFilter.propTypes = {
+  todosFilter: PT.func.isRequired,
+  setTabFunc: PT.func,
+  tab: PT.string,
 }
