@@ -9,7 +9,7 @@ let id = 100
 export default function App() {
   const [todos, setTodos] = useState([
     {
-      label: 'Completed task',
+      label: 'Active task',
       created: '2023-10-27T15:00:23',
       isCompleted: false,
       id: 1,
@@ -21,7 +21,7 @@ export default function App() {
       id: 2,
     },
     {
-      label: 'Active task',
+      label: 'Completed task',
       created: '2023-10-27T22:26:43',
       isCompleted: true,
       id: 3,
