@@ -4,13 +4,12 @@ import PT from 'prop-types'
 import Task from './Task'
 
 export default function TaskList({ todos, removeTask, toggleCompleted, todosFiltred, changeTask }) {
-  console.log('test lint')
   return (
     <ul className="todo-list">
       {todosFiltred.length > 0
         ? todosFiltred.map((todo) => {
             const { id, ...items } = todo
-          return (
+            return (
               <Task
                 {...items}
                 key={id}
@@ -23,7 +22,7 @@ export default function TaskList({ todos, removeTask, toggleCompleted, todosFilt
           })
         : todos.map((todo) => {
             const { id, ...items } = todo
-          return (
+            return (
               <Task
                 {...items}
                 key={id}
