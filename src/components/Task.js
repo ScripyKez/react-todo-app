@@ -30,6 +30,7 @@ export default function Task({ id, label, created, removeTask, isCompleted, togg
       </div>
       {isEditing ? (
         <input
+          autoFocus
           type="text"
           className="edit"
           value={edit}

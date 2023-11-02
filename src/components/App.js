@@ -52,7 +52,6 @@ export default function App() {
       const idx = todos.findIndex((todo) => todo.id === id)
       const newArr = [...todos]
       newArr[idx].label = newLabel
-
       setTodos(newArr)
     }
   }
