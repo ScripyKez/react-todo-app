@@ -48,10 +48,12 @@ export default function App() {
   }
 
   const changeTask = (id, newLabel) => {
-    const idx = todos.findIndex((todo) => todo.id === id)
-    const newArr = [...todos]
-    newArr[idx].label = newLabel
-    setTodos(newArr)
+    if (newLabel.length > 0) {
+      const idx = todos.findIndex((todo) => todo.id === id)
+      const newArr = [...todos]
+      newArr[idx].label = newLabel
+      setTodos(newArr)
+    }
   }
 
   const removeCompeted = () => {
