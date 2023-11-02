@@ -1,20 +1,16 @@
-import React from "react"
-import PT from "prop-types"
-import Task from "./Task"
+import React from 'react'
+import PT from 'prop-types'
 
-export default function TaskList({
-  todos,
-  removeTask,
-  toggleCompleted,
-  todosFiltred,
-  changeTask,
-}) {
+import Task from './Task'
+
+export default function TaskList({ todos, removeTask, toggleCompleted, todosFiltred, changeTask }) {
+  console.log('test lint')
   return (
     <ul className="todo-list">
       {todosFiltred.length > 0
-        ? todosFiltred.map(todo => {
+        ? todosFiltred.map((todo) => {
             const { id, ...items } = todo
-            return (
+          return (
               <Task
                 {...items}
                 key={id}
@@ -25,9 +21,9 @@ export default function TaskList({
               />
             )
           })
-        : todos.map(todo => {
+        : todos.map((todo) => {
             const { id, ...items } = todo
-            return (
+          return (
               <Task
                 {...items}
                 key={id}
@@ -53,20 +49,20 @@ TaskList.propTypes = {
 TaskList.defaultProps = {
   todos: [
     {
-      label: "TODO1",
-      created: "2023-10-27T15:00:23",
+      label: 'TODO1',
+      created: '2023-10-27T15:00:23',
       isCompleted: false,
       id: 1,
     },
     {
-      label: "TODO2",
-      created: "2023-10-26T23:00:47",
+      label: 'TODO2',
+      created: '2023-10-26T23:00:47',
       isCompleted: false,
       id: 2,
     },
     {
-      label: "TODO3",
-      created: "2023-10-27T22:26:43",
+      label: 'TODO3',
+      created: '2023-10-27T22:26:43',
       isCompleted: true,
       id: 3,
     },

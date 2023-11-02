@@ -1,5 +1,5 @@
-import React from "react"
-import PT from "prop-types"
+import React from 'react'
+import PT from 'prop-types'
 
 export default class TaskFilter extends React.Component {
   // state = {
@@ -7,10 +7,7 @@ export default class TaskFilter extends React.Component {
   // }
 
   handleActive = (e, cb, cb2) => {
-    if (
-      e.target.tagName === "BUTTON" &&
-      e.target.className !== this.props.tab
-    ) {
+    if (e.target.tagName === 'BUTTON' && e.target.className !== this.props.tab) {
       cb2(e.target.innerHTML)
       cb(e.target.innerHTML)
     }
@@ -18,26 +15,15 @@ export default class TaskFilter extends React.Component {
 
   render() {
     return (
-      <ul
-        className="filters"
-        onClick={e =>
-          this.handleActive(e, this.props.todosFilter, this.props.setTabFunc)
-        }
-      >
+      <ul className="filters" onClick={(e) => this.handleActive(e, this.props.todosFilter, this.props.setTabFunc)}>
         <li>
-          <button className={this.props.tab === "All" ? "selected" : ""}>
-            All
-          </button>
+          <button className={this.props.tab === 'All' ? 'selected' : ''}>All</button>
         </li>
         <li>
-          <button className={this.props.tab === "Active" ? "selected" : ""}>
-            Active
-          </button>
+          <button className={this.props.tab === 'Active' ? 'selected' : ''}>Active</button>
         </li>
         <li>
-          <button className={this.props.tab === "Completed" ? "selected" : ""}>
-            Completed
-          </button>
+          <button className={this.props.tab === 'Completed' ? 'selected' : ''}>Completed</button>
         </li>
       </ul>
     )
@@ -47,7 +33,7 @@ export default class TaskFilter extends React.Component {
 TaskFilter.defaultProps = {
   todosFilter: () => {},
   setTabFunc: () => {},
-  tab: "All",
+  tab: 'All',
 }
 
 TaskFilter.propTypes = {

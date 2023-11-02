@@ -1,8 +1,8 @@
-import React from "react"
-import PT from "prop-types"
+import React from 'react'
+import PT from 'prop-types'
 
 export default function NewTaskForm({ addTask }) {
-  const [inputValue, setInputValue] = React.useState("")
+  const [inputValue, setInputValue] = React.useState('')
   return (
     <header className="header">
       <h1>todos</h1>
@@ -10,12 +10,12 @@ export default function NewTaskForm({ addTask }) {
         className="new-todo"
         placeholder="What needs to be done?"
         autoFocus
-        onChange={e => setInputValue(e.target.value)}
+        onChange={(e) => setInputValue(e.target.value)}
         value={inputValue}
-        onKeyUp={e => {
-          if (e.key === "Enter") {
+        onKeyUp={(e) => {
+          if (e.key === 'Enter') {
             addTask(inputValue)
-            setInputValue("")
+            setInputValue('')
           }
         }}
       />
