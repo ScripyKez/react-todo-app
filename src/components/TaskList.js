@@ -2,7 +2,7 @@ import React from 'react'
 
 import Task from './Task'
 
-export default function TaskList({ dataArray, onDeleted, onToggleDone, onEdit }) {
+export default function TaskList({ dataArray, onDeleted, onToggleComplete, onEdit }) {
   const elements = dataArray.map((item) => {
     const { id, ...props } = item
     return (
@@ -10,7 +10,7 @@ export default function TaskList({ dataArray, onDeleted, onToggleDone, onEdit })
         {...props}
         key={id}
         onDeleted={() => onDeleted(id)}
-        onToggleDone={() => onToggleDone(id)}
+        onToggleComplete={() => onToggleComplete(id)}
         onEdit={(newText) => onEdit(id, newText)}
       />
     )
