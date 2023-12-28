@@ -4,102 +4,117 @@ import TaskList from './TaskList'
 import NewTaskForm from './NewTaskForm'
 import Footer from './Footer'
 
-let id = 100
-
 export default function App() {
-  const [todos, setTodos] = useState([
-    {
-      label: 'Active task',
-      created: '2023-10-27T15:00:23',
-      isCompleted: false,
-      id: 1,
-    },
-    {
-      label: 'Editing task',
-      created: '2023-10-26T23:00:47',
-      isCompleted: false,
-      id: 2,
-    },
-    {
-      label: 'Completed task',
-      created: '2023-10-27T22:26:43',
-      isCompleted: true,
-      id: 3,
-    },
-  ])
-  const [todosFiltred, setTodosFiltred] = useState([])
+  const initialArray = (val) => {
+    if (localStorage.getItem('Tasks')) {
+      switch (val) {
+        case 'dataArray':
+          return JSON.parse(localStorage.getItem('Tasks')).dataArray
 
-  const counterTodos = () => {
-    return todos?.reduce((acc, curr) => (curr.isCompleted === false ? (acc += 1) : acc), 0)
+        case 'filteredArray':
+          return JSON.parse(localStorage.getItem('Tasks')).filteredArray
+
+        default:
+          return []
+      }
+    } else {
+      return []
+    }
   }
+  let initialDataArray = initialArray('dataArray')
+  let initialFilteredArray = initialArray('filteredArray')
 
-  const todosFilter = (filter) => {
-    switch (filter) {
-      case 'Active':
-        setTodosFiltred(todos.filter((todo) => todo.isCompleted !== true))
-        break
-      case 'Completed':
-        setTodosFiltred(todos.filter((todo) => todo.isCompleted !== false))
-        break
-      default:
-        setTodosFiltred([])
-        break
+  const [dataArray, setDataArray] = useState(initialDataArray)
+  const [filteredArray, setFilteredArray] = useState(initialFilteredArray)
+
+  const createTask = (label, active = true, min = 2, sec = 0) => {
+    return {
+      label,
+      timer: {
+        min,
+        sec,
+      },
+      time: new Date(),
+      active,
+      id: `${new Date().getTime()}`,
     }
   }
 
-  const changeTask = (id, newLabel) => {
-    if (newLabel.length > 0) {
-      const idx = todos.findIndex((todo) => todo.id === id)
-      const newArr = [...todos]
-      newArr[idx].label = newLabel
-      setTodos(newArr)
-    }
-  }
-
-  const removeCompeted = () => {
-    setTodosFiltred([])
-    setTodos((prev) => prev.filter((todo) => todo.isCompleted !== true))
-  }
-
-  const addTask = (label) => {
-    const newTask = {
-      label: label,
-      created: new Date().toISOString(),
-      isCompleted: false,
-      id: id++,
-    }
-    setTodos((prev) => [...prev, newTask])
+  const onToggleComplete = (id) => {
+    const idx = dataArray.findIndex((el) => el.id === id)
+    const newArr = [...dataArray]
+    newArr[idx].active = !newArr[idx].active
+    setDataArray(newArr)
+    setFilteredArray(newArr)
   }
 
   const removeTask = (id) => {
-    const idx = todos.findIndex((el) => el.id === id)
-    const newArray = [...todos.slice(0, idx), ...todos.slice(idx + 1)]
-    setTodos(newArray)
+    const idx = dataArray.findIndex((el) => el.id === id)
+    const newArr = [...dataArray.slice(0, idx), ...dataArray.slice(idx + 1)]
+    localStorage.setItem('Tasks', JSON.stringify(newArr))
+    setDataArray(newArr)
+    setFilteredArray(newArr)
   }
 
-  const toggleCompleted = (id, state, cb) => {
-    setTodos((prev) => {
-      const newArr = [...prev]
-      newArr[prev.findIndex((todo) => todo.id === id)].isCompleted = !state
-      return newArr
-    })
-
-    cb()
+  const addTask = (value, min, sec) => {
+    const newItem = createTask(value, true, min, sec)
+    const newArr = [...dataArray, newItem]
+    localStorage.setItem('Tasks', JSON.stringify(newArr))
+    setDataArray(newArr)
+    setFilteredArray(newArr)
   }
+
+  const todosFilter = (filterName = 'All') => {
+    let newArr = [...dataArray]
+    switch (filterName) {
+      case 'Active':
+        newArr = dataArray.filter((el) => el.active)
+        setFilteredArray(newArr)
+        break
+      case 'Completed':
+        newArr = dataArray.filter((el) => !el.active)
+        setFilteredArray(newArr)
+        break
+      default:
+        setFilteredArray(newArr)
+        break
+    }
+  }
+
+  const removeCompleted = () => {
+    const newArr = dataArray.filter((el) => el.active)
+    setDataArray(newArr)
+    setFilteredArray(newArr)
+  }
+
+  const editItem = (id, newText) => {
+    const newArr = []
+    for (let i = 0; i < dataArray.length; i++) {
+      const el = dataArray[i]
+      if (el.id === id) el.label = newText
+      newArr.push(el)
+    }
+    setDataArray(newArr)
+    setFilteredArray(newArr)
+  }
+
+  const taskCounter = dataArray.filter((el) => el.active).length
+
+  localStorage.setItem('Tasks', JSON.stringify({ filteredArray, dataArray }))
 
   return (
-    <>
-      <NewTaskForm addTask={addTask} />
+    <section className="todoapp">
+      <NewTaskForm onTaskAdd={addTask} />
       <section className="main">
         <TaskList
-          todos={todos}
-          removeTask={removeTask}
-          toggleCompleted={toggleCompleted}
-          todosFiltred={todosFiltred}
-          changeTask={changeTask}
+          dataArray={filteredArray}
+          onDeleted={removeTask}
+          onToggleComplete={onToggleComplete}
+          todosFilter={todosFilter}
+          onEdit={editItem}
         />
-        <Footer removeCompeted={removeCompeted} counter={counterTodos()} todosFilter={todosFilter} />
+        <Footer taskCounter={taskCounter} todosFilter={todosFilter} removeCompleted={removeCompleted} />
       </section>
-    </>
+    </section>
   )
 }

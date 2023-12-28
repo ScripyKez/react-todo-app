@@ -1,43 +1,52 @@
-import React from 'react'
-import PT from 'prop-types'
+import React, { useState } from 'react'
 
-export default class TaskFilter extends React.Component {
-  // state = {
-  //   tab: "All",
-  // }
+export default function TaskFilter(props) {
+  const [All, setAll] = useState(true)
+  const [Active, setActive] = useState(false)
+  const [Completed, setCompleted] = useState(false)
 
-  handleActive = (e, cb, cb2) => {
-    if (e.target.tagName === 'BUTTON' && e.target.className !== this.props.tab) {
-      cb2(e.target.innerHTML)
-      cb(e.target.innerHTML)
+  const setFilter = (e) => {
+    const { textContent } = e.target
+    props.todosFilter(textContent)
+    try {
+      setActive(false)
+      setAll(false)
+      setCompleted(false)
+      switch (textContent) {
+        case 'All':
+          setAll(true)
+          break
+        case 'Active':
+          setActive(true)
+          break
+        case 'Completed':
+          setCompleted(true)
+          break
+        default:
+          break
+      }
+    } catch (error) {
+      // eslint-disable-next-line
+      console.log(error)
     }
   }
 
-  render() {
-    return (
-      <ul className="filters" onClick={(e) => this.handleActive(e, this.props.todosFilter, this.props.setTabFunc)}>
-        <li>
-          <button className={this.props.tab === 'All' ? 'selected' : ''}>All</button>
-        </li>
-        <li>
-          <button className={this.props.tab === 'Active' ? 'selected' : ''}>Active</button>
-        </li>
-        <li>
-          <button className={this.props.tab === 'Completed' ? 'selected' : ''}>Completed</button>
-        </li>
-      </ul>
-    )
+  const highlightElement = (element) => {
+    const obj = { Active, Completed, All }
+    if (obj[element]) return 'selected'
   }
-}
 
-TaskFilter.defaultProps = {
-  todosFilter: () => {},
-  setTabFunc: () => {},
-  tab: 'All',
-}
-
-TaskFilter.propTypes = {
-  todosFilter: PT.func.isRequired,
-  setTabFunc: PT.func,
-  tab: PT.string,
+  return (
+    <ul className="filters" onClick={setFilter}>
+      <li>
+        <button className={highlightElement('All')}>All</button>
+      </li>
+      <li>
+        <button className={highlightElement('Active')}>Active</button>
+      </li>
+      <li>
+        <button className={highlightElement('Completed')}>Completed</button>
+      </li>
+    </ul>
+  )
 }

@@ -1,93 +1,94 @@
-import React, { useState } from 'react'
-import PT from 'prop-types'
+import React, { useState, useEffect } from 'react'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
-export default function Task({ id, label, created, removeTask, isCompleted, toggleCompleted, changeTask }) {
-  const [isCompletedTask, setIsComplitedTask] = useState(isCompleted)
-  const [timeAgo] = useState(formatDistanceToNow(new Date(created), { includeSeconds: true }))
-  const [isEditing, setIsEditing] = useState(false)
-  const [edit, setEdit] = useState('')
+export default function Task(props) {
+  const [editing, setEditing] = useState(false)
+  const [newTaskText, setNewTaskText] = useState('')
+  const [timer, setTimer] = useState(props.timer)
+  const [timerLink, setTimerLink] = useState(null)
 
-  const handleChange = () => {
-    setIsComplitedTask((prev) => !prev)
+  const stopTimer = () => {
+    if (timerLink) {
+      clearInterval(timerLink)
+    }
   }
 
+  useEffect(() => {
+    if (timer.sec <= 0 && timer.min <= 0) clearInterval(timerLink)
+  })
+
+  useEffect(() => {
+    return () => clearInterval(timerLink)
+  }, [])
+
+  const startTimer = () => {
+    const timerInterval = setInterval(() => {
+      setTimer((timer) => {
+        const newTimer = { ...timer }
+        if (newTimer.sec === 0) {
+          newTimer.min = newTimer.min - 1
+          newTimer.sec = 60
+        }
+        newTimer.sec = newTimer.sec - 1
+        return newTimer
+      })
+    }, 1000)
+    setTimerLink(timerInterval)
+  }
+
+  const onEditClick = () => {
+    clearInterval(timerLink)
+    setEditing((editing) => !editing)
+    setNewTaskText(props.label)
+  }
+
+  const spaceCheck = (s) => {
+    if (s.trim() !== '') return true
+    return false
+  }
+
+  const editTask = (e) => {
+    e.preventDefault()
+    const { onEdit, label } = props
+    if (spaceCheck(newTaskText)) onEdit(newTaskText)
+    setNewTaskText(label)
+    setEditing((editing) => !editing)
+  }
+
+  const editTaskText = (e) => {
+    const { value } = e.target
+    if (value) {
+      setNewTaskText(value)
+    }
+  }
+
+  const { label, time, active, onDeleted, onToggleDone } = props
+
+  let className = ''
+  if (!active) className += ' completed'
+  if (editing) className += ' editing'
+
   return (
-    <li className={isEditing ? 'editing' : isCompletedTask ? 'completed' : ''}>
+    <li className={className}>
       <div className="view">
-        <input
-          className="toggle"
-          type="checkbox"
-          onChange={() => toggleCompleted(id, isCompletedTask, handleChange)}
-          checked={isCompletedTask}
-        />
+        <input className="toggle" type="checkbox" onChange={onToggleDone} checked={!active} />
         <label>
-          <span className="description">{label}</span>
-          <span className="created">{timeAgo}</span>
+          <span className="title" onClick={onToggleDone}>
+            {label}
+          </span>
+          <span className="description">
+            <button className="icon icon-play" onClick={startTimer} />
+            <button className="icon icon-pause" onClick={stopTimer} />
+            {timer.min}:{timer.sec}
+          </span>
+          <span className="description">{formatDistanceToNow(new Date(time)) + ' ago'}</span>
         </label>
-        <button className="icon icon-edit" onClick={() => setIsEditing((prev) => !prev)}></button>
-        <button className="icon icon-destroy" onClick={() => removeTask(id)}></button>
+        <button className="icon icon-edit" onClick={onEditClick} />
+        <button className="icon icon-destroy" onClick={onDeleted} />
       </div>
-      {isEditing ? (
-        <input
-          autoFocus
-          type="text"
-          className="edit"
-          value={edit}
-          onChange={(e) => setEdit(e.target.value)}
-          onKeyUp={(e) => {
-            if (e.key === 'Enter') {
-              changeTask(id, edit)
-              setIsEditing(false)
-            }
-          }}
-        />
-      ) : (
-        ''
-      )}
+      <form onSubmit={editTask}>
+        <input className="edit" type="text" onChange={editTaskText} value={newTaskText} />
+      </form>
     </li>
   )
 }
-
-Task.propsTypes = {
-  id: PT.number.isRequired,
-  label: PT.string.isRequired,
-  created: PT.string.isRequired,
-  removeTask: PT.func,
-  isCompleted: PT.bool,
-  toggleCompleted: PT.func,
-  changeTask: PT.func,
-}
-
-Task.defaultProps = {
-  id: 0,
-  label: 'TODO-0',
-  created: '2023-10-10T23:22',
-  removeTask: () => {},
-  isCompleted: false,
-  toggleCompleted: () => {},
-  changeTask: () => {},
-}
-// {/* <li className="completed">
-//   <div className="view">
-//     <input className="toggle" type="checkbox" />
-//     <label>
-//       <span className="description">Completed task{/*label*/}</span>
-//       <span className="created">created 17 seconds ago</span>
-//     </label>
-//     <button className="icon icon-edit"></button>
-//     <button className="icon icon-destroy"></button>
-//   </div>
-// </li>
-// <li className="editing">
-//   <div className="view">
-//     <input className="toggle" type="checkbox" />
-//     <label>
-//       <span className="description">Editing task</span>
-//       <span className="created">created 5 minutes ago</span>
-//     </label>
-//     <button className="icon icon-edit"></button>
-//     <button className="icon icon-destroy"></button>
-//   </div>
-//   <input type="text" className="edit" value="Editing task" />
-// </li> */}

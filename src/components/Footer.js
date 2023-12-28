@@ -1,40 +1,15 @@
 import React from 'react'
-import PT from 'prop-types'
 
 import TaskFilter from './TasksFilter'
 
-export default function Footer({ removeCompeted, counter, todosFilter }) {
-  const [tab, setTab] = React.useState('All')
-
-  const setTabFunc = (tab) => {
-    setTab(tab)
-  }
-
+export default function Footer({ taskCounter, todosFilter, removeCompleted }) {
   return (
     <footer className="footer">
-      <span className="todo-count">{counter === 0 ? 'None active' : counter + ' items'}</span>
-      <TaskFilter tab={tab} todosFilter={todosFilter} setTabFunc={setTabFunc} />
-      <button
-        className="clear-completed"
-        onClick={() => {
-          setTab('All')
-          removeCompeted()
-        }}
-      >
+      <span className="todo-count">{taskCounter} items left</span>
+      <TaskFilter todosFilter={todosFilter} />
+      <button className="clear-completed" onClick={removeCompleted}>
         Clear completed
       </button>
     </footer>
   )
-}
-
-Footer.defaultProps = {
-  removeCompeted: () => {},
-  counter: 0,
-  todosFilter: () => {},
-}
-
-Footer.propsTypes = {
-  removeCompeted: PT.func.isRequired,
-  counter: PT.number.isRequired,
-  todosFilter: ProcessingInstruction.func,
 }
