@@ -46,7 +46,7 @@ export default function NewTaskForm({ onTaskAdd }) {
   return (
     <header className="header">
       <h1>todos</h1>
-      <form onSubmit={formSubmit} className="new-todo-form" noValidate={true}>
+      <form onSubmit={onFormSubmit} className="new-todo-form" noValidate={true}>
         <input
           className="new-todo"
           placeholder="What needs to be done?"

@@ -71,7 +71,7 @@ export default function Task(props) {
   return (
     <li className={className}>
       <div className="view">
-        <input className="toggle" type="checkbox" onChange={onToggleDone} checked={!active} />
+        <input className="toggle" type="checkbox" onChange={onToggleDone} />
         <label>
           <span className="title" onClick={onToggleDone}>
             {label}
