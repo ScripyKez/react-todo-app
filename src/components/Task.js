@@ -62,7 +62,7 @@ export default function Task(props) {
     }
   }
 
-  const { label, time, active, onDeleted, onToggleDone } = props
+  const { label, time, active, onDeleted, onToggleComplete } = props
 
   let className = ''
   if (!active) className += ' completed'
@@ -71,9 +71,9 @@ export default function Task(props) {
   return (
     <li className={className}>
       <div className="view">
-        <input className="toggle" type="checkbox" onChange={onToggleDone} />
+        <input className="toggle" type="checkbox" onChange={onToggleComplete} checked={!active} />
         <label>
-          <span className="title" onClick={onToggleDone}>
+          <span className="title" onClick={onToggleComplete}>
             {label}
           </span>
           <span className="description">

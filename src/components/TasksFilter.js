@@ -1,51 +1,36 @@
 import React, { useState } from 'react'
 
-export default function TaskFilter(props) {
-  const [All, setAll] = useState(true)
-  const [Active, setActive] = useState(false)
-  const [Completed, setCompleted] = useState(false)
+export default function TaskFilter({ todosFilter }) {
+  const [filterName, setFilterName] = useState('All')
 
   const setFilter = (e) => {
     const { textContent } = e.target
-    props.todosFilter(textContent)
-    try {
-      setActive(false)
-      setAll(false)
-      setCompleted(false)
-      switch (textContent) {
-        case 'All':
-          setAll(true)
-          break
-        case 'Active':
-          setActive(true)
-          break
-        case 'Completed':
-          setCompleted(true)
-          break
-        default:
-          break
-      }
-    } catch (error) {
-      // eslint-disable-next-line
-      console.log(error)
+    todosFilter(textContent)
+    switch (textContent) {
+      case 'All':
+        setFilterName('All')
+        break
+      case 'Active':
+        setFilterName('Active')
+        break
+      case 'Completed':
+        setFilterName('Completed')
+        break
+      default:
+        break
     }
-  }
-
-  const highlightElement = (element) => {
-    const obj = { Active, Completed, All }
-    if (obj[element]) return 'selected'
   }
 
   return (
     <ul className="filters" onClick={setFilter}>
       <li>
-        <button className={highlightElement('All')}>All</button>
+        <button className={filterName === 'All' ? 'selected' : ''}>All</button>
       </li>
       <li>
-        <button className={highlightElement('Active')}>Active</button>
+        <button className={filterName === 'Active' ? 'selected' : ''}>Active</button>
       </li>
       <li>
-        <button className={highlightElement('Completed')}>Completed</button>
+        <button className={filterName === 'Completed' ? 'selected' : ''}>Completed</button>
       </li>
     </ul>
   )
