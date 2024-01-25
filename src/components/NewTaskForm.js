@@ -5,6 +5,8 @@ export default function NewTaskForm({ onTaskAdd }) {
   const [min, setMin] = useState('')
   const [sec, setSec] = useState('')
 
+  const CheckSpaces = (str) => str.trim() !== ''
+
   const inputChange = (e, name) => {
     const { value } = e.target
     if (name === 'min' || name === 'sec') {
@@ -23,7 +25,7 @@ export default function NewTaskForm({ onTaskAdd }) {
         }
       }
     } else {
-      if (value[0] !== ' ') {
+      if (value[0] !== ' ' && CheckSpaces(value)) {
         setLabel(value)
       }
     }
