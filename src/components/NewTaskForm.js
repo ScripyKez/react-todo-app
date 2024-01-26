@@ -5,7 +5,7 @@ export default function NewTaskForm({ onTaskAdd }) {
   const [min, setMin] = useState('')
   const [sec, setSec] = useState('')
 
-  const CheckSpaces = (str) => str.trim() !== ''
+  const CheckSpaces = (str) => str[str.length - 1] !== ' '
 
   const inputChange = (e, name) => {
     const { value } = e.target
@@ -25,18 +25,21 @@ export default function NewTaskForm({ onTaskAdd }) {
         }
       }
     } else {
-      if (value[0] !== ' ' && CheckSpaces(value)) {
+      if (value[0] !== ' ') {
         setLabel(value)
       }
     }
   }
 
   const onFormSubmit = () => {
-    if (label && (min || min === 0) && sec) {
+    const isCorrect = label && CheckSpaces(label) && (min || min === 0) && sec
+    if (isCorrect) {
       onTaskAdd(label, min, sec)
       setLabel('')
       setSec('')
       setMin('')
+    } else {
+      alert('Something is wrong')
     }
   }
 

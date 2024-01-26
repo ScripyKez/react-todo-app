@@ -35,7 +35,7 @@
         "newlines-between": "always"
       }
     ],
-    "no-console": "error"
+    "no-console": "warn"
   },
   "settings": {
     "import/resolver": {
